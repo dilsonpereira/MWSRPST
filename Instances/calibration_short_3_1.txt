@@ -4,19 +4,19 @@ Number_of_team_types: 2
 Daily_available_time: 8
 Number_of_days: 4
 Travel_times:
-0.000 0.069 0.182
-0.069 0.000 0.115
-0.182 0.115 0.000
+0.000 0.216 0.134
+0.216 0.000 0.083
+0.134 0.083 0.000
 Standard_task_times:
-4.000 4.000 4.000 4.000
+4.000 1.000 4.000 4.000
 Customer_sizes:
--1 1.242 0.788
+-1 1.411 1.651
 Starting_tasks:
 -1 0 0
 Team_proficiencies:
 1.000 2.000
 Team_costs:
-1.250 2.000
+1.000 2.250
 Team_availabilities:
-2 3
+3 2
 Max_teams: 5

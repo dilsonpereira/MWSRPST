@@ -50,7 +50,7 @@ class MyCutCallback(UserCutCallback):
                         s['numcuts'] += 1
                         self.AddCut(coefs, sense, rhs)
         
-    def Cut1(self):
+    def CutProposition2(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -70,7 +70,7 @@ class MyCutCallback(UserCutCallback):
                                     cuts.append((coefs, 'L', 1, vio))
         return cuts
 
-    def Cut2(self):
+    def CutProposition3(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -95,7 +95,7 @@ class MyCutCallback(UserCutCallback):
         return cuts
 
 
-    def Cut3a(self):
+    def CutProposition4(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -118,7 +118,7 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    def Cut3b(self):
+    def CutProposition5(self):
         cuts = []
         P = self.P
         f, f_ = self.f, self.f_
@@ -144,7 +144,7 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    def Cut4a(self):
+    def CutProposition6(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -176,7 +176,7 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    def Cut5(self):
+    def CutProposition13(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -223,7 +223,7 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    def Cut7(self):
+    def CutProposition8(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -263,7 +263,7 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    def Cut8a(self):
+    def CutProposition9a(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -287,7 +287,7 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    def Cut8b(self):
+    def CutProposition9b(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -314,7 +314,7 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    def Cut9b(self):
+    def CutProposition7(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -352,7 +352,7 @@ class MyCutCallback(UserCutCallback):
         return cuts
 
 
-    def Cut10(self):
+    def CutProposition10(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -374,7 +374,7 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    def Cut11(self):
+    def CutProposition11a(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -402,7 +402,7 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    def Cut11b(self):
+    def CutProposition11b(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -451,7 +451,7 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    def Cut11c(self):
+    def CutProposition12a(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -477,7 +477,7 @@ class MyCutCallback(UserCutCallback):
         return cuts
 
 
-    def Cut11d(self):
+    def CutProposition12b(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -527,7 +527,7 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    def CutSets(self):
+    def CutProposition1(self):
         cuts = []
         P = self.P
         y, y_ = self.y, self.y_
@@ -613,100 +613,100 @@ class MyCutCallback(UserCutCallback):
         self.SP = []
 
         if not cutParameters:
-            s = {'separation':self.Cut1, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition2, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut2, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition3, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut3a, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition4, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut3b, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition5, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut4a, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition6, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut5, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition13, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut7, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition8, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut8a, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition9a, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut8b, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition9b, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut9b, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition7, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut10, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition10, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut11, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition11a, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut11b, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition11b, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut11c, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition12a, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.Cut11d, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition12b, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
 
-            s = {'separation':self.CutSets, 'numcuts':0, 'active':True, 'threshold':1e-6}
+            s = {'separation':self.CutProposition1, 'numcuts':0, 'active':True, 'threshold':1e-6}
             self.SP.append(s)
         else:
-            s = {'separation':self.Cut1, 'numcuts':0, 'active':cutParameters['cut1']['active'], 'threshold':cutParameters['cut1']['e']}
+            s = {'separation':self.CutProposition2, 'numcuts':0, 'active':cutParameters['CutProposition2']['active'], 'threshold':cutParameters['CutProposition2']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut2, 'numcuts':0, 'active':cutParameters['cut2']['active'], 'threshold':cutParameters['cut2']['e']}
+            s = {'separation':self.CutProposition3, 'numcuts':0, 'active':cutParameters['CutProposition3']['active'], 'threshold':cutParameters['CutProposition3']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut3a, 'numcuts':0, 'active':cutParameters['cut3a']['active'], 'threshold':cutParameters['cut3a']['e']}
+            s = {'separation':self.CutProposition4, 'numcuts':0, 'active':cutParameters['CutProposition4']['active'], 'threshold':cutParameters['CutProposition4']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut3b, 'numcuts':0, 'active':cutParameters['cut3b']['active'], 'threshold':cutParameters['cut3b']['e']}
+            s = {'separation':self.CutProposition5, 'numcuts':0, 'active':cutParameters['CutProposition5']['active'], 'threshold':cutParameters['CutProposition5']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut4a, 'numcuts':0, 'active':cutParameters['cut4a']['active'], 'threshold':cutParameters['cut4a']['e']}
+            s = {'separation':self.CutProposition6, 'numcuts':0, 'active':cutParameters['CutProposition6']['active'], 'threshold':cutParameters['CutProposition6']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut5, 'numcuts':0, 'active':cutParameters['cut5']['active'], 'threshold':cutParameters['cut5']['e']}
+            s = {'separation':self.CutProposition13, 'numcuts':0, 'active':cutParameters['CutProposition13']['active'], 'threshold':cutParameters['CutProposition13']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut7, 'numcuts':0, 'active':cutParameters['cut7']['active'], 'threshold':cutParameters['cut7']['e']}
+            s = {'separation':self.CutProposition8, 'numcuts':0, 'active':cutParameters['CutProposition8']['active'], 'threshold':cutParameters['CutProposition8']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut8a, 'numcuts':0, 'active':cutParameters['cut8a']['active'], 'threshold':cutParameters['cut8a']['e']}
+            s = {'separation':self.CutProposition9a, 'numcuts':0, 'active':cutParameters['CutProposition9a']['active'], 'threshold':cutParameters['CutProposition9a']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut8b, 'numcuts':0, 'active':cutParameters['cut8b']['active'], 'threshold':cutParameters['cut8b']['e']}
+            s = {'separation':self.CutProposition9b, 'numcuts':0, 'active':cutParameters['CutProposition9b']['active'], 'threshold':cutParameters['CutProposition9b']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut9b, 'numcuts':0, 'active':cutParameters['cut9b']['active'], 'threshold':cutParameters['cut9b']['e']}
+            s = {'separation':self.CutProposition7, 'numcuts':0, 'active':cutParameters['CutProposition7']['active'], 'threshold':cutParameters['CutProposition7']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut10, 'numcuts':0, 'active':cutParameters['cut10']['active'], 'threshold':cutParameters['cut10']['e']}
+            s = {'separation':self.CutProposition10, 'numcuts':0, 'active':cutParameters['CutProposition10']['active'], 'threshold':cutParameters['CutProposition10']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut11, 'numcuts':0, 'active':cutParameters['cut11']['active'], 'threshold':cutParameters['cut11']['e']}
+            s = {'separation':self.CutProposition11a, 'numcuts':0, 'active':cutParameters['CutProposition11a']['active'], 'threshold':cutParameters['CutProposition11a']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut11b, 'numcuts':0, 'active':cutParameters['cut11b']['active'], 'threshold':cutParameters['cut11b']['e']}
+            s = {'separation':self.CutProposition11b, 'numcuts':0, 'active':cutParameters['CutProposition11b']['active'], 'threshold':cutParameters['CutProposition11b']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut11c, 'numcuts':0, 'active':cutParameters['cut11c']['active'], 'threshold':cutParameters['cut11c']['e']}
+            s = {'separation':self.CutProposition12a, 'numcuts':0, 'active':cutParameters['CutProposition12a']['active'], 'threshold':cutParameters['CutProposition12a']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.Cut11d, 'numcuts':0, 'active':cutParameters['cut11d']['active'], 'threshold':cutParameters['cut11d']['e']}
+            s = {'separation':self.CutProposition12b, 'numcuts':0, 'active':cutParameters['CutProposition12b']['active'], 'threshold':cutParameters['CutProposition12b']['e']}
             self.SP.append(s)
 
-            s = {'separation':self.CutSets, 'numcuts':0, 'active':cutParameters['cutSets']['active'], 'threshold':cutParameters['cutSets']['e']}
+            s = {'separation':self.CutProposition1, 'numcuts':0, 'active':cutParameters['CutProposition1']['active'], 'threshold':cutParameters['CutProposition1']['e']}
             self.SP.append(s)
 
 class MyInfo(MIPInfoCallback):
