@@ -99,6 +99,7 @@ def Constructive(P, ChooseTask = ChooseTaskSmallestEndingTime):
             currentDay += 1
 
         if len(solution) <= P.maxDays:
+            '''
             print('feasible solution:', len(solution), 'days----------------')
             cost = 0
             for h in range(len(solution)):
@@ -109,6 +110,7 @@ def Constructive(P, ChooseTask = ChooseTaskSmallestEndingTime):
                         print(route)
                         cost += P.teamCost[teamType[k]]
             print('total cost:', cost)
+            '''
 
             cost = 0
             for h in range(len(solution)):
@@ -122,6 +124,6 @@ def Constructive(P, ChooseTask = ChooseTaskSmallestEndingTime):
             numTeams += 1
             teams = range(numTeams)
         else:
-            print('FAILED TO GENERATE FEASIBLE SOLUTION')
+            #print('FAILED TO GENERATE FEASIBLE SOLUTION')
             return None
 

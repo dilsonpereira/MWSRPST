@@ -110,14 +110,13 @@ def SolveProblem(problem, constructive = True, Model = False, name = 'unnamed', 
         te = time.time()
         theu = te-ts
         
-        '''
-        print('Constructive heuristic')
-        if sol == None:
-            print('No solution found')
-        else:
-            print('  Solution cost:', costheu, len(sol), 'days')
-        print('  Time:', te-ts)
-        '''
+        if prin:
+            print('Constructive heuristic')
+            if sol == None:
+                print('  No solution found')
+            else:
+                print('  Solution cost:', costheu, dheu, 'days')
+            print('  Time:', te-ts)
 
     if Model:
         info, _ = Model3Prod.Solve(problem, (solheu, tt, costheu) if sol != None else None, integer=False)
@@ -127,13 +126,17 @@ def SolveProblem(problem, constructive = True, Model = False, name = 'unnamed', 
         info, sol = Model3Prod.Solve(problem, (solheu, tt, costheu) if sol != None else None, integer=True, cutParameters = cutParameters)
         te = time.time()
 
-        if info['status'] == 'infeasible':
-            if prin:
-                print(name, 'INFEASIBLE')
-
         if prin:
-            print('{:>10} {:>8} {:>8} {:>8.2f} {:>8} {:>8.2f} {:>8.2f} {:>8.2f} {:>8} {:>8} {:>8.2f}'.format(name, costheu, dheu, theu, info['ub'], info['lb'], lbroot, info['lbroot'], len(sol), info['numnodes'], te-ts))
-
+            print('Model')
+            if info['status'] == 'infeasible':
+                print('  INFEASIBLE')
+            else:
+                print('  ub bb', info['ub'], len(sol), 'days')
+                print('  lb bb', info['lb'])
+                print('  lin rel', lbroot)
+                print('  lb root (cuts)', info['lbroot'])
+                print('  num nodes', info['numnodes'])
+                print('  time', te-ts)
 
 def GetProblem(type, numVertices):
     numTeams = 2
@@ -168,44 +171,36 @@ def GetProblem(type, numVertices):
 
     return instanceArgs 
 
-def ForestProdExperiments():
-
-    import random
-    
-    seed = list(range(100))
-    for n in [3,4]:
-        print('Instance Size:', n, '#############################')
-        for t in ['short', 'long']:
-            print('Type', t, '****************')
-            for cp in cut_parameters[t]:
-                print('{:>10} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8}'.format('name', 'ubheu', 'dheu', 'theu', 'ubbb', 'lbbb', 'lbroot', 'lbroot*', 'dbb', 'nodes', 'tbb'))
-                i, f = 0, 0
-                while f < 10:
-                    random.seed(seed[n]+i)
-                    instance = MPVRPIR(**GetProblem(t,n))
-                    s = SolveProblem(problem = instance, constructive = True, Model = False, name = '{}'.format(i), cutParameters = cp)
-                    f += 1 if s != None else 0
-                    i += 1
-
-def OneInstance(type, n, i):
-        print('Instance', i)
+def OneInstanceRandom(type, n, i):
+        print('Seed', i)
         random.seed(i)
 
         instanceArgs = GetProblem(type, n)
-        print(instanceArgs)
+        print('Instance parameters', instanceArgs)
 
-        #instance = MPVRPIR(**instanceArgs) 
-        #instance.SaveToFile('{}_{}_{}'.format(type, n, i))
-        #instance = MPVRPIR()
-        #instance.ReadInstance('{}_{}_{}'.format(type, n, i))
+        instance = MPVRPIR(**instanceArgs) 
 
-        SolveProblem(problem = instance, constructive = True, Model = False)
+        SolveProblem(problem = instance, constructive = True, Model = True, cutParameters=cp_backward_short if type == 'short' else cp_backward_long)
 
-#import sys
-#OneInstance(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
-#ForestProdExperiments()
-#CutCalibration()
+def OneInstanceFile(filename):
+        print(filename)
+        instance = MPVRPIR()
+        instance.ReadInstance(filename)
+        SolveProblem(problem = instance, constructive = True, Model = True, cutParameters=cp_backward_short if type == 'short' else cp_backward_long)
 
+#### Uncomment to execute a single random instance
+# format type (short or long) n seed
+'''
+import sys
+OneInstanceRandom(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
+'''
+
+#### Uncomment to execute a single instance from a file
+import sys
+OneInstanceFile(sys.argv[1])
+
+#### Uncomment to execute instances in the folder
+'''
 from os import listdir
 from os.path import isfile, join
 
@@ -220,4 +215,4 @@ for f in sorted(listdir(instancefolder)):
         #SolveProblem(problem = instance, constructive = True, Model = True, cutParameters = cp_forward_short, prin=True)
         SolveProblem(problem = instance, constructive = True, Model = False)
         print('\n\n\n\n')
-
+'''

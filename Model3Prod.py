@@ -21,7 +21,6 @@ import psutil
 class MyCutCallback(UserCutCallback):
     def __init__(self, env):
         UserCutCallback.__init__(self, env)
-        #self.adicionou = False
 
     def GetValues(self):
         vars = self.X + self.Y + self.F
@@ -34,10 +33,8 @@ class MyCutCallback(UserCutCallback):
         self.y_ = np.array([[[[val[self.y(k, h, i, v)] for v in range(P.numVertices)] for i in range(P.numTasks)] for h in range(P.maxDays)] for k in range(P.numTeams)])
         self.f_ = np.array([[[[val[self.f(k, h, i, v)] for v in range(P.numVertices)] for i in range(P.numTasks)] for h in range(P.maxDays)] for k in range(P.numTeams)])
 
-
     def AddCut(self, coefs, sense, rhs):
         cut = list(zip(*coefs))
-        #print('>>>', cut)
         #self.add(cut=cut, sense=sense, rhs=rhs, use=self.use_cut.filter)
         self.add(cut=cut, sense=sense, rhs=rhs)
 
@@ -52,7 +49,6 @@ class MyCutCallback(UserCutCallback):
                     if vio > s['threshold']:
                         s['numcuts'] += 1
                         self.AddCut(coefs, sense, rhs)
-                #print(s['separation'], len(C))
         
     def Cut1(self):
         cuts = []
@@ -227,38 +223,6 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-    '''
-    def Cut5(self):
-        cuts = []
-        P = self.P
-        val = self.val
-        y = self.y
-
-        trios = [( (u, a), (v, b), (w, c) )
-                for u in range(1, P.numVertices) for a in range(P.startingTask[u], P.numActivities)
-                for v in range(u+1, P.numVertices) for b in range(P.startingTask[v], P.numActivities) 
-                for w in range(v+1, P.numVertices) for c in range(P.startingTask[w], P.numActivities) ]
-
-        for k in range(P.numTeams):
-            for h in range(P.maxDays):
-                xvars = [self.x(k, h, 0, v) for v in range(1, P.numVertices)]
-                coefsx = [(x, -1) for x in xvars]
-                sumx = sum([ val[x] for x in xvars ])
-
-                for (u, a), (v, b), (w, c) in trios:
-                    #ESSE CALCULO ESTÀ INCOMPLETO
-                    tour = P.travelTime[0][u] + P.travelTime[u][v] + P.travelTime[v][w] + P.travelTime[w][0]
-                    dT = P.availableTime-tour
-                    if not (P.taskTimes[k][u][a] > dT and P.taskTimes[k][v][b] > dT and P.taskTimes[k][w][c] > dT):
-                        continue
-
-                    vio = val[y(k, h, a, u)] + val[y(k, h, b, v)] + val[y(k, h, c, w)] - sumx -1
-                    if vio > 1e-6:
-                        coefs = [( y(k, h, a, u), 1 ), (y(k, h, b, v), 1), (y(k, h, c, w), 1)]  + coefsx
-                        cuts.append((coefs, 'L', 1, vio))
-
-        return cuts
-    '''
     def Cut7(self):
         cuts = []
         P = self.P
@@ -487,7 +451,6 @@ class MyCutCallback(UserCutCallback):
 
         return cuts
 
-
     def Cut11c(self):
         cuts = []
         P = self.P
@@ -510,23 +473,6 @@ class MyCutCallback(UserCutCallback):
 
                         if vio > 1e-6:
                             cuts.append((coefs, 'L', 0, vio))
-
-        '''
-        if cuts != []:
-            for (coefs, s, rhs, v) in cuts:
-                print('>')
-                for (var,coef) in coefs:
-                    print(var, coef, self.val[var], end = "    ")
-                print()
-        cuts = []
-        if not self.adicionou:
-            #coefs = [('y_1_3_0_2', 1), ('f_1_1_0_2', -1), ('f_1_2_0_2', -1), ('f_1_3_0_2', -1)]
-            #cuts = [(coefs, 'L', 0, 1)]
-            coefs = [('y_1_3_0_2', 1)]
-            cuts = [(coefs, 'E', 0, 1)]
- 
-            self.adicionou = True
-        '''
 
         return cuts
 
@@ -577,11 +523,8 @@ class MyCutCallback(UserCutCallback):
                             coefs.append((f(k, h_, a, v), -1))
 
                         if vio > 1e-6:
-                            #print('coefs', coefs)
-                            #print('vals', vs)
                             cuts.append((coefs, 'L', 0, vio))
-        #if cuts != []:
-        #    print(cuts)
+
         return cuts
 
     def CutSets(self):
@@ -778,7 +721,7 @@ class MyInfo(MIPInfoCallback):
 
         process = psutil.Process(os.getpid())
 
-        if process.memory_percent() > 60:
+        if process.memory_percent() > 90:
             print('out of memory')
             self.abort()
 
@@ -797,12 +740,8 @@ def SolveCplexModel3(P, heu=None, useHeuristicCallback=False, integer = True, cu
     name, obj, lb, ub, types = list(zip(*x))
     if integer:
         prob.variables.add(names = name, obj = obj, lb = lb, ub = ub, types = types)
-        #prob.order.set([(xname(k, h, 1, v), 100, prob.order.branch_direction.up) for k in range(P.numTeams) for h in range(P.maxDays) for v in range(1, P.numVertices)])
-        #prob.order.set([(xname(k, h, u, v), P.maxDays-h if u == 0 else 0, prob.order.branch_direction.default) for k in range(P.numTeams) for h in range(P.maxDays) for u in range(P.numVertices) for v in range(P.numVertices) ])
     else:
         prob.variables.add(names = name, obj = obj, lb = lb, ub = ub)
-
-    #prob.order.set([(xname(k, h, u, v), P.maxDays-h, prob.order.branch_direction.up) for k in range(P.numTeams) for h in range(P.maxDays) for u in range(P.numVertices) for v in range(P.numVertices) ])
 
     # q[k,h,u,v] in R+: moment in which team k arrives at vertex v comming from u on day h
     qname = lambda k,h,u,v: 'q_{}_{}_{}_{}'.format(k,h,u,v)
@@ -822,9 +761,6 @@ def SolveCplexModel3(P, heu=None, useHeuristicCallback=False, integer = True, cu
         prob.order.set([(var.name, 10, prob.order.branch_direction.default) for var in y])
     else:
         prob.variables.add(names = name, obj = obj, lb = lb, ub = ub)
-
-    #prob.order.set([(var.name, 10, prob.order.branch_direction.default) for var in y])
-    #prob.order.set([(yname(k, h, i, v), 2*P.maxDays-h, prob.order.branch_direction.up) for k in range(P.numTeams) for h in range(P.maxDays) for i in range(P.numTasks) for v in range(P.numVertices) ])
 
     # f[k,h,i,v] in R+: fraction of task i of customer v executed by team k on day h
     fname = lambda k,h,i,v: 'f_{}_{}_{}_{}'.format(k,h,i,v)
@@ -989,69 +925,12 @@ def SolveCplexModel3(P, heu=None, useHeuristicCallback=False, integer = True, cu
                 coefs.append(1)
         prob.linear_constraints.add(lin_expr = [[vars, coefs]], senses = ['L'], rhs = [P.maxTeamsAll])
 
-    #prob.linear_constraints.add(lin_expr = [[[yname(1,3,0,2)], [1]]], senses = ['L'], rhs = [0])
-    #prob.linear_constraints.add(lin_expr = [[[yname(1,3,0,2), fname(1,3,0,2)], [1, -1]]], senses = ['L'], rhs = [0])
-    #vars, coefs = zip(*[('y_1_3_0_2', 1), ('f_1_1_0_2', -1), ('f_1_2_0_2', -1), ('f_1_3_0_2', -1)])
-    #prob.linear_constraints.add(lin_expr = [[vars, coefs]], senses = ['L'], rhs = [0])
-    #vars, coefs = zip(*[('y_0_3_0_2', 1), ('f_0_1_0_2', -1), ('f_0_2_0_2', -1), ('f_0_3_0_2', -1)])
-    #prob.linear_constraints.add(lin_expr = [[vars, coefs]], senses = ['L'], rhs = [0])
-    #import sys
-    #prob.write('p.lp')
-    #sys.exit(0)
     prob.parameters.preprocessing.presolve.set(0)
 
-    '''
-    for v in range(1, P.numVertices):
-        for i in range(P.startingTask[v], P.numTasks):
-            for k in range(P.numTeams):
-                for h in range(P.maxDays):
-                    M = min((P.availableTime - P.travelTime[0][v] - P.travelTime[v][0])/P.taskTimes[k][v][i], 1)
-                    vars = [fname(k,h,i,v), yname(k,h,i,v)]
-                    coefs = [-100, 1]
-                    prob.linear_constraints.add(lin_expr = [[vars, coefs]], senses = ['L'], rhs = [0])
-    '''    
-    # symmetry
-    '''
-    for k in range(P.numTeams):
-        for h in range(1, P.maxDays):
-            vars, coefs = [], []
-            for v in range(1, P.numVertices):
-                vars.append(xname(k,h,0,v))
-                coefs.append(1)
-                vars.append(xname(k,h-1,0,v))
-                coefs.append(-1)
-            prob.linear_constraints.add(lin_expr = [[vars, coefs]], senses = ['L'], rhs = [0]) 
-    '''
-      
-    '''
-    for h in range(1, P.maxDays):  
-        vars, coefs = [], []    
-        for k in range(P.numTeams):
-            for v in range(1, P.numVertices):
-                vars.append(xname(k,h,0,v))
-                coefs.append(1)
-                vars.append(xname(k,h-1,0,v))
-                coefs.append(-1)
-        prob.linear_constraints.add(lin_expr = [[vars, coefs]], senses = ['L'], rhs = [0]) 
-    '''
-
-    '''
-    for h in range(1, P.maxDays):  
-        vars, coefs = [], []    
-        for k in range(P.numTeams):
-            for v in range(1, P.numVertices):
-                vars.append(xname(k,h,0,v))
-                coefs.append(1)
-                vars.append(xname(k,h-1,0,v))
-                coefs.append(-P.maxTeamsAll)
-        prob.linear_constraints.add(lin_expr = [[vars, coefs]], senses = ['L'], rhs = [0]) 
-    '''
     # create mipstart solution
     if integer and heu:
         mipstart = Model3MipStartFromHeuristic(P, heu, x+q+y+f, xname, qname, yname, fname)
         prob.MIP_starts.add(mipstart, prob.MIP_starts.effort_level.check_feasibility)
-        #prob.MIP_starts.add(mipstart, prob.MIP_starts.effort_level.repair)
-        #prob.MIP_starts.add(mipstart, prob.MIP_starts.effort_level.solve_fixed)
 
     # register heuristic callback
     if integer and useHeuristicCallback:
@@ -1083,11 +962,6 @@ def SolveCplexModel3(P, heu=None, useHeuristicCallback=False, integer = True, cu
     #prob.parameters.mip.strategy.rinsheur.set(-1)
     #prob.parameters.emphasis.mip.set(3)
 
-    '''
-    prob.parameters.mip.strategy.bbinterval.set(1)
-    #prob.parameters.mip.limits.nodes.set(0)
-    '''
-    
     prob.parameters.mip.cuts.bqp.set(-1)
     prob.parameters.mip.cuts.cliques.set(-1)
     prob.parameters.mip.cuts.covers.set(-1)
@@ -1112,12 +986,6 @@ def SolveCplexModel3(P, heu=None, useHeuristicCallback=False, integer = True, cu
     prob.parameters.clocktype.set(2) # wall clock time
     prob.parameters.timelimit.set(3600)
 
-    '''
-    prob.parameters.mip.limits.treememory.set(1) # memory limit in MB
-    prob.parameters.workmem.set(1000)
-    prob.parameters.mip.strategy.file.set(0) # send compressed node files to disk when working memory limit is reached
-    '''
-
     prob.solve()
 
     if prob.solution.status[prob.solution.get_status()] == 'MIP_infeasible':
@@ -1127,19 +995,6 @@ def SolveCplexModel3(P, heu=None, useHeuristicCallback=False, integer = True, cu
     if prob.solution.status[prob.solution.get_status()] == 'MIP_time_limit_infeasible':
         info['status'] = 'time_limit_infeasible'
         return info, None
-
-    '''
-    if integer and useCuts:
-        vars = cc.X + cc.Y + cc.F
-        vals = prob.solution.get_values(vars)
-        val = dict(zip(vars, vals))
-        cc.val = val
-
-        cc.x_ = np.array([[[[val[cc.x(k, h, u, v)] for v in range(P.numVertices)] for u in range(P.numVertices)] for h in range(P.maxDays)] for k in range(P.numTeams)])
-        cc.y_ = np.array([[[[val[cc.y(k, h, i, v)] for v in range(P.numVertices)] for i in range(P.numTasks)] for h in range(P.maxDays)] for k in range(P.numTeams)])
-        cc.f_ = np.array([[[[val[cc.f(k, h, i, v)] for v in range(P.numVertices)] for i in range(P.numTasks)] for h in range(P.maxDays)] for k in range(P.numTeams)])
-        cc.Cut11c()
-    '''
 
     ub = prob.solution.get_objective_value()
 
@@ -1151,27 +1006,15 @@ def SolveCplexModel3(P, heu=None, useHeuristicCallback=False, integer = True, cu
     else:
         info['lb'] = ub
 
-    '''
-    if integer and useCuts:
-        for s in cc.SP:
-            print(s['separation'].__name__, s['numcuts'])
-    '''
-
-
     if integer:
-        #print(cc.SP[-1])
         solution = []
         used = set()
-        #print('cost:', ub)
-        #print([(yname(1,3,i,2), prob.solution.get_values(yname(1,3,i,2))) for i in range(P.startingTask[2], P.numTasks)])
         for h in range(P.maxDays):
-            #print('day', h, '---------------------')
             solution.append( [[] for k in range(P.numTeams)] )
           
             for k in range(P.numTeams):
                 solution[-1][k].append( [(0, None, 0, 0)] )
 
-                #print('team', k)
                 s = 0
                 while True: 
                     t = None
@@ -1184,30 +1027,23 @@ def SolveCplexModel3(P, heu=None, useHeuristicCallback=False, integer = True, cu
                     if t == None:
                         break
                     used.add( (k, h, s, t) )
-                    #print(s, '->', t, end=' ')
                     q = prob.solution.get_values(qname(k, h, s, t))
                     s = t
                     if s:
-                        #print('(', end = "")
                         ta = 0
                         for i in range(P.startingTask[s], P.numTasks):
                             vf = prob.solution.get_values(fname(k,h,i,s))
                             ta += vf*P.taskTimes[k][s][i]
                             if vf > 0:
                                 solution[-1][k][-1].append((s, i, vf, q+ta))
-                                #print(i, vf, q+ta, end=", ")
                                 T = P.availableTime-P.travelTime[0][s]-P.travelTime[s][0]
-                                #print('>',ceil(P.taskTimes[k][s][i]/T), P.taskTimes[k][s][i], end=', ')
-
-                        #print(')', end = " ") 
                     else:
                         solution[-1][k][-1].append((0, None, 0, q))
                         solution[-1][k].append( [(0, None, 0, 0)] )
-                        #print('--')
+
         for h in range(P.maxDays-1, -1, -1):
             if all([len(solution[h][k]) == 1 for k in range(P.numTeams)]):
                 solution.pop(h)
-                
     else:
         solution = None
 
@@ -1226,19 +1062,12 @@ class Model3HeuristicCallback(HeuristicCallback):
             if currentDay >= self.P.maxDays:
                 return availableTasks[0]
 
-            #tentar acesar (u,b) vai dar erro, pois depende do time em si, mas o que é passado é o teamtype
-            #u, b = partialSolution[-1][team][-1][0], partialSolution[-1][team][-1][1]
-            #xval = lambda v, a: vardict[ self.xname(team, currentDay, u, v) ] 
-            #yval = lambda v, a: vardict[ self.yname(team, currentDay, a, v) ]
             fval = lambda v, a: vardict[ self.fname(team, currentDay, a, v) ]
 
-            #return max( availableTasks, key = lambda va: xval(*va) + yval(*va) )
             return max( availableTasks, key = lambda va: fval(*va) )
-
 
         heu = Constructive.Constructive(self.P, ChooseTaskHeuristicCallback)
         if heu != None and heu[2] < cur:
-            #print('heuristic callback found new incumbent: ', heu[2], ',', len(heu[0]), 'days')
             solution = Model3MipStartFromHeuristic( self.P, heu, self.vars, self.xname, self.qname, self.yname, self.fname)
             self.set_solution(solution)
 
@@ -1267,8 +1096,6 @@ def Model3MipStartFromHeuristic(P, heu, vars, xname, qname, yname, fname):
 
  
 def Solve(problem, initialSolution = None, integer = True, cutParameters = None):
-    #problem.maxDays = len(initialSolution)
-
     return SolveCplexModel3(problem, initialSolution, useHeuristicCallback = True, integer = integer, cutParameters = cutParameters)
 
 

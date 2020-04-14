@@ -1,0 +1,23 @@
+Number_of_vertices: 4
+Number_of_tasks: 4
+Number_of_team_types: 2
+Daily_available_time: 8
+Number_of_days: 4
+Travel_times:
+0.000 0.065 0.282 0.228
+0.065 0.000 0.256 0.186
+0.282 0.256 0.000 0.090
+0.228 0.186 0.090 0.000
+Standard_task_times:
+9.000 10.000 7.000 9.000
+Customer_sizes:
+-1 0.634 0.851 0.530
+Starting_tasks:
+-1 0 0 0
+Team_proficiencies:
+1.000 2.000
+Team_costs:
+1.250 2.000
+Team_availabilities:
+2 3
+Max_teams: 5
